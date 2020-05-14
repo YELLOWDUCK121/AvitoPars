@@ -6,6 +6,7 @@ wb = load_workbook('avito.xlsx')
 sheet = wb[wb.sheetnames[0]]
 
 namepricedct = {}
+namepricelst = []
 
 for i in range(1, 2):
 	
@@ -38,9 +39,12 @@ for i in range(1, 2):
 			break
 
 for key in namepricedct:
-	print(key, namepricedct[key])
+	namepricelst.append((namepricedct[key], key))
 
+namepricelst.sort()
 
+for inf in namepricelst:
+	print(inf)
 
 
 
