@@ -1,10 +1,15 @@
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
+from openpyxl import load_workbook
+
+wb = load_workbook('avito.xlsx')
+sheet = wb[wb.sheetnames[0]]
 
 namepricedct = {}
-for i in range(2000000000):
+
+for i in range(1, 2):
 	
-	htmlcode = urlopen('https://www.avito.ru/moskva/noutbuki').read().decode('utf-8')
+	htmlcode = urlopen('https://www.avito.ru/moskva/noutbuki?p=' + str(i)).read().decode('utf-8')
 	bscode = BeautifulSoup(htmlcode, features="html.parser")
 
 	bsdiscrs = bscode.find_all('div', {'class': 'description item_table-description'})
@@ -20,9 +25,20 @@ for i in range(2000000000):
 		pricefinish = price.find('₽')
 		price = price[pricestart + 1:pricefinish:]
 		price = price.replace(' ', '')
+		if price == 'Ценанеуказана</span':
+			continue
 		price = int(price)
-		
-		print(name, price)
+
+		if namepricedct.get(name) == None:
+			namepricedct[name] = price
+
+		elif namepricedct[name] != price:
+			continue
+		else:
+			break
+
+for key in namepricedct:
+	print(key, namepricedct[key])
 
 
 
